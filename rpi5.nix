@@ -1,10 +1,11 @@
-{ inputs, lib, modulesPath, pkgs, ... }: {
+{ inputs, lib, modulesPath, nixpkgs, pkgs, ... }: {
 
   environment.systemPackages = with pkgs; [
     git
     python3
     raspberrypi-eeprom
-    (import ./game.nix { inherit pkgs; })
+    neovim
+    (import ./game.nix { inherit nixpkgs; })
   ];
 
   imports = with inputs.nixos-raspberrypi.nixosModules; [
@@ -80,7 +81,14 @@
     };
   };
 
-  system.stateVersion = lib.mkForce "24.11";
+  system = {
+    activationScripts.copyFileToHome.text = ''
+      mkdir -p /home/nixos/.zed_server
+      rm /home/nixos/.zed_server/* -f
+      cp -r ${nixpkgs.zed-editor.remote_server}/bin/* /home/nixos/.zed_server/
+    '';
+    stateVersion = lib.mkForce "24.11";
+  };
 
   time.timeZone = "Australia/Sydney";
 
