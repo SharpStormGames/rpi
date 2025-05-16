@@ -1,6 +1,7 @@
 { inputs, lib, modulesPath, pkgs, ... }: {
 
   environment.systemPackages = with pkgs; [
+    git
     python3
     raspberrypi-eeprom
     (import ./game.nix { inherit pkgs; })
@@ -25,18 +26,42 @@
     };
   };
 
+  i18n = {
+    defaultLocale = "en_AU.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "en_AU.UTF-8";
+      LC_IDENTIFICATION = "en_AU.UTF-8";
+      LC_MEASUREMENT = "en_AU.UTF-8";
+      LC_MONETARY = "en_AU.UTF-8";
+      LC_NAME = "en_AU.UTF-8";
+      LC_NUMERIC = "en_AU.UTF-8";
+      LC_PAPER = "en_AU.UTF-8";
+      LC_TELEPHONE = "en_AU.UTF-8";
+      LC_TIME = "en_AU.UTF-8";
+    };
+  };
+
   networking = {
-    useNetworkd = true;
+    firewall.allowedTCPPorts = [ 22 ];
+    hostName = "rpi5";
+    interfaces.end0.useDHCP = true;
     networkmanager = {
       enable = true;
       plugins = lib.mkForce [];
     };
     useDHCP = false;
-    hostName = "rpi5";
-    firewall.allowedTCPPorts = [ 22 ];
   };
 
-  nix.settings.trusted-users = [ "nixos" ];
+  nix = {
+    extraOptions = "warn-dirty = false";
+    settings = {
+      auto-optimise-store = true;
+      experimental-features = [ "nix-command" "flakes" ];
+      extra-substituters = [ "https://nixos-raspberrypi.cachix.org" ];
+      extra-trusted-public-keys = [ "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI=" ];
+      trusted-users = [ "root" "nixos" ];
+    };
+  };
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
 
   security = {
@@ -55,15 +80,6 @@
     };
   };
 
-  systemd.network.networks."10-eth0" = {
-    matchConfig.Name = "eth0";
-    networkConfig = {
-      Address = "10.42.0.2/24";
-      Gateway = "10.42.0.1";
-      DNS = "8.8.8.8";
-    };
-  };
-
   system.stateVersion = lib.mkForce "24.11";
 
   time.timeZone = "Australia/Sydney";
@@ -71,13 +87,9 @@
   users.users = {
     nixos = {
       extraGroups = [ "networkmanager" "video" "wheel" ];
-      initialHashedPassword = "";
+      initialHashedPassword = "nixos";
       isNormalUser = true;
-      #openssh.authorizedKeys.keys = [ "" ];
     };
-    root = {
-      initialHashedPassword = "";
-      #openssh.authorizedKeys.keys = [ "" ];
-    };
+    root.initialHashedPassword = "root";
   };
 }
