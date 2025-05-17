@@ -25,15 +25,10 @@ nmcli connection add type ethernet con-name PiSSH ifname <interface> ipv4.method
 
 Replace interface with the ethernet interface, (use `ip a` to see it)
 
-On the Pi, run
+Ping the Pi
 ```sh
-nmcli connection add type ethernet con-name "PiSSH" ifname end0 ipv4.method manual ipv4.addresses 10.42.0.2/24 ipv4.gateway 10.42.0.1 ipv4.dns 10.42.0.10
-nmcli con up PiSSH
+ping 10.42.0.2
 ```
-
-Check that the static ip is correct (use `ip addr show end0`)
-
-Ping the host (use `ping 10.42.0.1`)
 
 If a response is seen, SSH into the Pi
 ```sh

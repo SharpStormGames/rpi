@@ -49,6 +49,25 @@
     networkmanager = {
       enable = true;
       plugins = lib.mkForce [];
+      ensureProfiles.profiles.PiSSH = {
+        connection = {
+          id = "PiSSH";
+          interface-name = "end0";
+          type = "ethernet";
+          uuid = "5e0a9fb9-774c-4d89-bc76-e01519143fb4";
+        };
+        ipv4 = {
+          address1 = "10.42.0.2/24";
+          dns = "10.42.0.10;";
+          gateway = "10.42.0.1";
+          method = "manual";
+        };
+        ipv6 = {
+          addr-gen-mode = "default";
+          method = "auto";
+        };
+        proxy = { };
+      };
     };
     useDHCP = false;
   };
