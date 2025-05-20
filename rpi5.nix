@@ -4,6 +4,7 @@
     git
     python3
     raspberrypi-eeprom
+    rshell
     neovim
     (import ./game.nix { inherit nixpkgs; })
   ];
@@ -98,6 +99,7 @@
       enable = true;
       settings.PermitRootLogin = "yes";
     };
+    udev.packages = [ pkgs.raspberrypi-udev-rules ];
   };
 
   system = {
@@ -109,11 +111,13 @@
     stateVersion = lib.mkForce "24.11";
   };
 
+  systemd.tmpfiles.packages = [ pkgs.raspberrypi-udev-rules ];
+
   time.timeZone = "Australia/Sydney";
 
   users.users = {
     nixos = {
-      extraGroups = [ "networkmanager" "video" "wheel" ];
+      extraGroups = [ "networkmanager" "video" "wheel" "dialout" "gpio" ];
       initialHashedPassword = "nixos";
       isNormalUser = true;
     };

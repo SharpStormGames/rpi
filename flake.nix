@@ -3,6 +3,7 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
     nixos-images = { url = "github:nvmd/nixos-images/sdimage-installer"; inputs.nixos-stable.follows = "nixpkgs"; inputs.nixos-unstable.follows = "nixpkgs"; };
+    mypkgs = { url = "github:sharpstormgames/pkgs"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
   nixConfig = {
@@ -11,7 +12,7 @@
   };
 
   outputs = { self, nixos-images, nixos-raspberrypi, ... }@inputs: let
-    nixpkgs = import inputs.nixpkgs { system = "aarch64-linux"; }; game = nixpkgs.callPackage ./game.nix { inherit nixpkgs; };
+    nixpkgs = import inputs.nixpkgs { system = "aarch64-linux"; }; game = nixpkgs.callPackage ./game.nix { inherit inputs nixpkgs; };
   in {
     packages.aarch64-linux.default = game;
     nixosConfigurations = {
@@ -24,8 +25,7 @@
         system = "aarch64-linux";
         specialArgs = { inherit inputs nixos-raspberrypi nixpkgs; };
         modules = [
-          ./rpi5.nix
-          nixos-images.nixosModules.sdimage-installer
+          ./rpi5.nix nixos-images.nixosModules.sdimage-installer
           ({ modulesPath, ... }: { disabledModules = [(modulesPath + "/installer/sd-card/sd-image-aarch64-installer.nix")]; })
         ];
       };
