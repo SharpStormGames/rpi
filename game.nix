@@ -3,7 +3,7 @@
     colorama
     gpiozero
     pyserial
-    inputs.mypkgs.packages.aarch64.rpi-lgpio
+    inputs.mypkgs.packages.aarch64-linux.rpi-lgpio
   ]);
 in
   nixpkgs.writeScriptBin "air-hockey" ''

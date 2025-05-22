@@ -6,7 +6,7 @@
     raspberrypi-eeprom
     rshell
     neovim
-    (import ./game.nix { inherit nixpkgs; })
+    (import ./game.nix { inherit inputs nixpkgs; })
   ];
 
   imports = with inputs.nixos-raspberrypi.nixosModules; [
