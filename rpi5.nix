@@ -2,6 +2,7 @@
 
   environment.systemPackages = with pkgs; [
     git
+    gh
     python3
     raspberrypi-eeprom
     rshell

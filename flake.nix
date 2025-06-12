@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixpkgs-unstable";
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
     nixos-images = { url = "github:nvmd/nixos-images/sdimage-installer"; inputs.nixos-stable.follows = "nixpkgs"; inputs.nixos-unstable.follows = "nixpkgs"; };
     mypkgs = { url = "github:sharpstormgames/pkgs"; inputs.nixpkgs.follows = "nixpkgs"; };
